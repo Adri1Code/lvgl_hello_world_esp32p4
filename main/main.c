@@ -11,9 +11,9 @@ static lv_obj_t *screen1 = NULL;
 static lv_obj_t *screen2 = NULL;
 
 // Modifie la luminosite selon le changement sur le slider
-static void brightness_slider_event_cb(lv_event_t* e)
+static void brightness_slider_event_cb(lv_event_t* event)
 {
-    lv_obj_t *slider = lv_event_get_target(e);
+    lv_obj_t *slider = lv_event_get_target(event);
     uint32_t value = lv_slider_get_value(slider);
 
     bsp_display_brightness_set(value);
@@ -22,9 +22,9 @@ static void brightness_slider_event_cb(lv_event_t* e)
 }
 
 // Changement d'ecran avec pression du doigt
-static void screen_long_press_event_cb(lv_event_t *e)
+static void screen_long_press_event_cb(lv_event_t *event)
 {
-    lv_obj_t *current_screen = lv_event_get_target(e);
+    lv_obj_t *current_screen = lv_event_get_target(event);
     
     lv_point_t point;
     lv_indev_get_point(lv_indev_get_act(), &point);
