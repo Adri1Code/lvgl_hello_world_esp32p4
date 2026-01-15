@@ -7,6 +7,9 @@
 
 static const char *TAG = "APP_MAIN";
 
+static lv_obj_t *screen1 = NULL;
+
+
 // Modifie la luminosite selon le changement sur le slider
 static void brightness_slider_event_cb(lv_event_t* e)
 {
@@ -44,10 +47,12 @@ void app_main(void)
     // Creation de l'interface graphique
     bsp_display_lock(0);                                // verrouillage de LVGL pour manipuler les objets
 
-    lv_obj_t *scr = lv_scr_act();                       // recupere l'ecran actif
+    // creation du premier screen 
+    screen1 = lv_obj_create(NULL);                     
+    screen1 = lv_scr_act();
 
     // Slider en haut de l'ecran
-    lv_obj_t *slider = lv_slider_create(scr);           // creer un slider
+    lv_obj_t *slider = lv_slider_create(screen1);           // creer un slider
     lv_slider_set_range(slider, 0, 100);                // range du slider
     lv_slider_set_value(slider, 100, LV_ANIM_OFF);      // valeur initiale
     lv_obj_set_width(slider, lv_pct(80));               // 80% de la largeur de l'ecran
@@ -56,11 +61,11 @@ void app_main(void)
     // Evenement : utilisateur change le slider 
     lv_obj_add_event_cb(slider, brightness_slider_event_cb, LV_EVENT_VALUE_CHANGED, NULL);
 
-    lv_obj_t *slider_label = lv_label_create(scr);      
+    lv_obj_t *slider_label = lv_label_create(screen1);      
     lv_label_set_text(slider_label, "Brightness");
     lv_obj_align_to(slider_label, slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 5);
 
-    lv_obj_t *label = lv_label_create(scr);
+    lv_obj_t *label = lv_label_create(screen1);
     lv_obj_set_style_text_font(label, &lv_font_montserrat_44, 0);
     lv_label_set_text(label, "Hello World !");
     lv_obj_center(label);                                // centrer le texte
