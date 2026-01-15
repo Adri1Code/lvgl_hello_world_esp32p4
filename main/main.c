@@ -5,6 +5,9 @@
 #include "bsp/display.h"
 #include "lvgl.h"
 
+#define SCREEN_WIDTH 1024
+#define SCREE_HEIGHT 600
+
 static const char *TAG = "APP_MAIN";
 
 static lv_obj_t *screen1 = NULL;
@@ -22,16 +25,12 @@ static void brightness_slider_event_cb(lv_event_t* event)
 }
 
 // Changement d'ecran avec pression du doigt
-static void screen_long_press_event_cb(lv_event_t *event)
+static void screen_long_press_event_cb()
 {
-    lv_obj_t *current_screen = lv_event_get_target(event);
-    
     lv_point_t point;
     lv_indev_get_point(lv_indev_get_act(), &point);
 
-    lv_coord_t screen_width = lv_obj_get_width(current_screen);
-
-    if (point.x > screen_width / 2)
+    if (point.x > SCREEN_WIDTH / 2)
     {
         ESP_LOGI(TAG, "Appui long detecte sur la droite - Ecran 1->2");
         lv_scr_load_anim(screen2, LV_SCR_LOAD_ANIM_MOVE_LEFT, 300, 0, false);
