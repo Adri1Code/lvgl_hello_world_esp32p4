@@ -58,6 +58,10 @@ void app_main(void)
 
     lv_obj_add_event_cb(slider, brightness_slider_event_cb, LV_EVENT_VALUE_CHANGED, NULL);
 
+    lv_obj_t *slider_label = lv_label_create(scr);
+    lv_label_set_text(slider_label, "Brightness");
+    lv_obj_align_to(slider_label, slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 5);
+
     // Création du texte
     lv_obj_t *label = lv_label_create(scr);
     lv_obj_set_style_text_font(label, &lv_font_montserrat_44, 0);
