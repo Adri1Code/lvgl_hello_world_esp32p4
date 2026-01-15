@@ -1,11 +1,11 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_log.h"
-#include "bsp/esp-bsp.h"    //bsp = board support package
+#include "bsp/esp-bsp.h"    
 #include "bsp/display.h"
 #include "lvgl.h"
 
-static const char *TAG = "MAIN";
+static const char *TAG = "APP_MAIN";
 
 // Changes the brightness according to the new user
 static void brightness_slider_event_cb(lv_event_t* e)
@@ -18,7 +18,6 @@ static void brightness_slider_event_cb(lv_event_t* e)
     ESP_LOGI(TAG, "Luminositee ajustee a : %ld%%", value);
 
 }
-
 
 void app_main(void)
 { 
