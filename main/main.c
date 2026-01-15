@@ -8,7 +8,7 @@
 static const char *TAG = "MAIN";
 
 void app_main(void)
-{
+{ 
     // 1. Configuration de l'affichage (reprise de ton code fonctionnel)
     bsp_display_cfg_t cfg = {
         .lvgl_port_cfg = ESP_LVGL_PORT_INIT_CONFIG(),
@@ -24,6 +24,7 @@ void app_main(void)
     // 2. Initialisation du matériel
     lv_display_t *disp = bsp_display_start_with_config(&cfg);
     bsp_display_backlight_on();
+    bsp_display_brightness_set(80);
 
     if (disp != NULL) {
         bsp_display_rotate(disp, LV_DISPLAY_ROTATION_180);
@@ -34,6 +35,7 @@ void app_main(void)
 
     lv_obj_t *scr = lv_scr_act(); // Récupère l'écran actif
     
+
     // Création du texte
     lv_obj_t *label = lv_label_create(scr);
     lv_obj_set_style_text_font(label, &lv_font_montserrat_44, 0);
