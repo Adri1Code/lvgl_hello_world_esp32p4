@@ -7,6 +7,19 @@
 
 static const char *TAG = "MAIN";
 
+// Changes the brightness according to the new user
+static void brightness_slider_event_cb(lv_event_t* e)
+{
+    lv_obj_t *slider = lv_event_get_target(e);
+    uint32_t value = lv_slider_get_value(slider);
+
+    bsp_display_brightness_set(value);
+
+    ESP_LOGI(TAG, "Luminositee ajustee a : %ld%%", value);
+
+}
+
+
 void app_main(void)
 { 
     // 1. Configuration de l'affichage (reprise de ton code fonctionnel)
@@ -43,6 +56,7 @@ void app_main(void)
     lv_obj_set_width(slider, lv_pct(80));           // 80% of screen width
     lv_obj_align(slider, LV_ALIGN_TOP_MID, 0, 20);  // top and center
 
+    lv_obj_add_event_cb(slider, brightness_slider_event_cb, LV_EVENT_VALUE_CHANGED, NULL);
 
     // Création du texte
     lv_obj_t *label = lv_label_create(scr);
