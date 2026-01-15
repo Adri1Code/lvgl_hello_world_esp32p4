@@ -8,7 +8,7 @@
 static const char *TAG = "APP_MAIN";
 
 static lv_obj_t *screen1 = NULL;
-
+static lv_obj_t *screen2 = NULL;
 
 // Modifie la luminosite selon le changement sur le slider
 static void brightness_slider_event_cb(lv_event_t* e)
@@ -20,6 +20,29 @@ static void brightness_slider_event_cb(lv_event_t* e)
 
     ESP_LOGI(TAG, "Luminositee ajustee a : %ld%%", value);
 }
+
+// Changement d'ecran avec pression du doigt
+static void screen_long_press_event_cb(lv_event_t *e)
+{
+    lv_obj_t *current_screen = lv_event_get_target(e);
+    
+    lv_point_t point;
+    lv_indev_get_point(lv_indev_get_act(), &point);
+
+    lv_coord_t screen_width = lv_obj_get_width(current_screen);
+
+    if (point.x > screen_width / 2)
+    {
+        ESP_LOGI(TAG, "Appui long detecte sur la droite - Ecran 1->2");
+        lv_scr_load_anim(screen2, LV_SCR_LOAD_ANIM_MOVE_LEFT, 300, 0, false);
+    }
+    else
+    {
+        ESP_LOGI(TAG, "Appui long detecte sur la gauche - Ecran 2->1");
+        lv_scr_load_anim(screen1, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 300, 0, false);
+    }
+}
+
 
 void app_main(void)
 { 
@@ -47,12 +70,12 @@ void app_main(void)
     // Creation de l'interface graphique
     bsp_display_lock(0);                                // verrouillage de LVGL pour manipuler les objets
 
-    // creation du premier screen 
-    screen1 = lv_obj_create(NULL);                     
+    // Creation du premier screen 
+    screen1 = lv_obj_create( NULL );                     
     screen1 = lv_scr_act();
 
     // Slider en haut de l'ecran
-    lv_obj_t *slider = lv_slider_create(screen1);           // creer un slider
+    lv_obj_t *slider = lv_slider_create(screen1);       // creer un slider
     lv_slider_set_range(slider, 0, 100);                // range du slider
     lv_slider_set_value(slider, 100, LV_ANIM_OFF);      // valeur initiale
     lv_obj_set_width(slider, lv_pct(80));               // 80% de la largeur de l'ecran
@@ -69,6 +92,20 @@ void app_main(void)
     lv_obj_set_style_text_font(label, &lv_font_montserrat_44, 0);
     lv_label_set_text(label, "Hello World !");
     lv_obj_center(label);                                // centrer le texte
+
+    // Changer de screen
+    lv_obj_add_event_cb(screen1, screen_long_press_event_cb, LV_EVENT_LONG_PRESSED, NULL);
+
+    // Creation du deuxieme ecran
+    screen2 = lv_obj_create( NULL ); 
+
+    lv_obj_t *label2 = lv_label_create(screen2);
+    lv_obj_set_style_text_font(label2, &lv_font_montserrat_44, 0);
+    lv_label_set_text(label2, "Screen 2");
+    lv_obj_center(label2);
+
+    // Changer de screen
+    lv_obj_add_event_cb(screen2, screen_long_press_event_cb, LV_EVENT_LONG_PRESSED, NULL);
 
     bsp_display_unlock();                                // deverouillage de LVGL
 
