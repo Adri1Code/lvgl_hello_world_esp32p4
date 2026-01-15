@@ -46,7 +46,6 @@ void app_main(void)
 
     lv_obj_t *scr = lv_scr_act();                       // recupere l'ecran actif
 
-
     // Slider en haut de l'ecran
     lv_obj_t *slider = lv_slider_create(scr);           // creer un slider
     lv_slider_set_range(slider, 0, 100);                // range du slider
@@ -64,7 +63,6 @@ void app_main(void)
     lv_obj_t *label = lv_label_create(scr);
     lv_obj_set_style_text_font(label, &lv_font_montserrat_44, 0);
     lv_label_set_text(label, "Hello World !");
-    
     lv_obj_center(label);                                // centrer le texte
 
     bsp_display_unlock();                                // deverouillage de LVGL
