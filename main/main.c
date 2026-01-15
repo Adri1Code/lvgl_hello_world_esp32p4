@@ -24,7 +24,7 @@ void app_main(void)
     // 2. Initialisation du matériel
     lv_display_t *disp = bsp_display_start_with_config(&cfg);
     bsp_display_backlight_on();
-    bsp_display_brightness_set(80);
+    bsp_display_brightness_set(100);
 
     if (disp != NULL) {
         bsp_display_rotate(disp, LV_DISPLAY_ROTATION_180);
@@ -34,7 +34,15 @@ void app_main(void)
     bsp_display_lock(0); // On verrouille LVGL pour manipuler les objets
 
     lv_obj_t *scr = lv_scr_act(); // Récupère l'écran actif
-    
+
+
+    // Slider en haut de l'ecran
+    lv_obj_t *slider = lv_slider_create(scr);
+    lv_slider_set_range(slider, 0, 100);
+    lv_slider_set_value(slider, 100, LV_ANIM_OFF);
+    lv_obj_set_width(slider, lv_pct(80));           // 80% of screen width
+    lv_obj_align(slider, LV_ALIGN_TOP_MID, 0, 20);  // top and center
+
 
     // Création du texte
     lv_obj_t *label = lv_label_create(scr);
