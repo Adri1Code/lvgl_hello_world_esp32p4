@@ -7,7 +7,7 @@
 
 static const char *TAG = "APP_MAIN";
 
-// Changes the brightness according to the new user
+// Modifie la luminosite selon le changement sur le slider
 static void brightness_slider_event_cb(lv_event_t* e)
 {
     lv_obj_t *slider = lv_event_get_target(e);
@@ -16,24 +16,23 @@ static void brightness_slider_event_cb(lv_event_t* e)
     bsp_display_brightness_set(value);
 
     ESP_LOGI(TAG, "Luminositee ajustee a : %ld%%", value);
-
 }
 
 void app_main(void)
 { 
-    // 1. Configuration de l'affichage (reprise de ton code fonctionnel)
+    // Configuration de l'affichage
     bsp_display_cfg_t cfg = {
-        .lvgl_port_cfg = ESP_LVGL_PORT_INIT_CONFIG(),
-        .buffer_size = BSP_LCD_DRAW_BUFF_SIZE,
-        .double_buffer = BSP_LCD_DRAW_BUFF_DOUBLE,
+        .lvgl_port_cfg = ESP_LVGL_PORT_INIT_CONFIG(),   // parametres de base pour LVGL
+        .buffer_size = BSP_LCD_DRAW_BUFF_SIZE,          // quantite de memoire allouee pour rendu graphique
+        .double_buffer = BSP_LCD_DRAW_BUFF_DOUBLE,      // rendu plus fluide
         .flags = {
-            .buff_dma = true,
-            .buff_spiram = false,
-            .sw_rotate = true,
+            .buff_dma = true,                           // transferts memoire sans CPU
+            .buff_spiram = false,                       // utilise RAM interne plutot que SPIRAM
+            .sw_rotate = true,                          // pivot de l'affichage
         }
     };
     
-    // 2. Initialisation du matériel
+    // Initialisation du materiel
     lv_display_t *disp = bsp_display_start_with_config(&cfg);
     bsp_display_backlight_on();
     bsp_display_brightness_set(100);
@@ -42,35 +41,33 @@ void app_main(void)
         bsp_display_rotate(disp, LV_DISPLAY_ROTATION_180);
     }
 
-    // 3. Création de l'interface graphique
-    bsp_display_lock(0); // On verrouille LVGL pour manipuler les objets
+    // Creation de l'interface graphique
+    bsp_display_lock(0);                                // verrouillage de LVGL pour manipuler les objets
 
-    lv_obj_t *scr = lv_scr_act(); // Récupère l'écran actif
+    lv_obj_t *scr = lv_scr_act();                       // recupere l'ecran actif
 
 
     // Slider en haut de l'ecran
-    lv_obj_t *slider = lv_slider_create(scr);
-    lv_slider_set_range(slider, 0, 100);
-    lv_slider_set_value(slider, 100, LV_ANIM_OFF);
-    lv_obj_set_width(slider, lv_pct(80));           // 80% of screen width
-    lv_obj_align(slider, LV_ALIGN_TOP_MID, 0, 20);  // top and center
+    lv_obj_t *slider = lv_slider_create(scr);           // creer un slider
+    lv_slider_set_range(slider, 0, 100);                // range du slider
+    lv_slider_set_value(slider, 100, LV_ANIM_OFF);      // valeur initiale
+    lv_obj_set_width(slider, lv_pct(80));               // 80% de la largeur de l'ecran
+    lv_obj_align(slider, LV_ALIGN_TOP_MID, 0, 20);      // aligne en haut au centre 
 
+    // Evenement : utilisateur change le slider 
     lv_obj_add_event_cb(slider, brightness_slider_event_cb, LV_EVENT_VALUE_CHANGED, NULL);
 
-    lv_obj_t *slider_label = lv_label_create(scr);
+    lv_obj_t *slider_label = lv_label_create(scr);      
     lv_label_set_text(slider_label, "Brightness");
     lv_obj_align_to(slider_label, slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 5);
 
-    // Création du texte
     lv_obj_t *label = lv_label_create(scr);
     lv_obj_set_style_text_font(label, &lv_font_montserrat_44, 0);
     lv_label_set_text(label, "Hello World !");
     
-    // Style : Utilisation de la police par défaut (souvent Montserrat 14 ou 20)
-    // On centre l'objet sur l'écran
-    lv_obj_center(label);
+    lv_obj_center(label);                                // centrer le texte
 
-    bsp_display_unlock(); // On libère LVGL
+    bsp_display_unlock();                                // deverouillage de LVGL
 
     ESP_LOGI(TAG, "Hello World affiche avec succes.");
 
